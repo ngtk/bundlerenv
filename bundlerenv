@@ -1,0 +1,33 @@
+#!/bin/bash
+
+usage() {
+  cat <<EOL
+install:
+echo 'eval "\$\(bundlerenv init\)"' >> ~/.bashrc
+EOL
+}
+
+main() {
+  if [ "$1" = "init" ]; then
+    init
+  else
+    usage
+  fi
+}
+
+init() {
+  cat << EOL
+bundle() {
+  _bundle="/usr/local/var/rbenv/shims/bundle"
+
+  if [ -e ".bundler-version" ]; then
+    echo "using Bundler \$(cat .bundler-version) set by .bundler-version"
+    eval "\$_bundle _\$(cat .bundler-version)_ \$*"
+  else
+    \$_bundle \$*
+  fi
+}
+EOL
+}
+
+main "$@"
