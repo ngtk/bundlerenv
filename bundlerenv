@@ -28,6 +28,10 @@ bundle() {
     \$bundle \$*
   fi
 }
+
+bundler() {
+  bundle
+}
 EOL
 }
 
