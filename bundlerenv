@@ -10,6 +10,8 @@ EOL
 main() {
   if [ "$1" = "init" ]; then
     init
+  elif [ "$1" = "version" ]; then
+    version
   else
     usage
   fi
@@ -33,6 +35,17 @@ bundler() {
   bundle
 }
 EOL
+}
+
+version() {
+  local bundle="/usr/local/var/rbenv/shims/bundle"
+  if [ -e "Gemfile.lock" ]; then
+    local bundler_version=$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
+    local gemfile_lock_path="$(pwd)/Gemfile.lock"
+    echo "Bundler version $bundler_version (set by $gemfile_lock_path)"
+  else
+    $bundle -v
+  fi
 }
 
 main "$@"
