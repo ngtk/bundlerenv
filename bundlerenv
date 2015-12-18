@@ -12,6 +12,8 @@ main() {
     init
   elif [ "$1" = "version" ]; then
     version
+  elif [ "$1" = "versions" ]; then
+    versions
   else
     usage
   fi
@@ -46,6 +48,40 @@ version() {
   else
     $bundle -v
   fi
+}
+
+versions() {
+  # fetch bundler version you have to use
+  local bundle="/usr/local/var/rbenv/shims/bundle"
+  if [ -e "Gemfile.lock" ]; then
+    local bundler_version=$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
+    local gemfile_lock_path="$(pwd)/Gemfile.lock"
+    local description="(set by $gemfile_lock_path)"
+  else
+    local bundler_version=$($bundle -v)
+  fi
+
+  # check version presence set by Gemfile.lock
+  local version_list=$(gem list ^bundler$ | sed -e 's/bundler (//' | sed -e 's/)//' )
+  if [ "$(echo $version_list | grep $bundler_version)" = "" ]; then
+    local gemfile_lock_path="$(pwd)/Gemfile.lock"
+    echo "  $bundler_version (set by $gemfile_lock_path) is not exist."
+  fi
+
+  # show version list
+  local num=1
+  while :
+  do
+    local _version=$(echo $version_list | cut -d"," -f$num | sed -e "s/ //")
+    if [ "$_version" = ""  ]; then
+      break
+    elif [ "$_version" = $bundler_version ]; then
+      echo "* $_version $description"
+    else
+      echo "  $_version"
+    fi
+    num=$(($num+1))
+  done
 }
 
 main "$@"
