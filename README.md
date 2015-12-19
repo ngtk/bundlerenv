@@ -2,10 +2,10 @@
 use Bundler specified by Gemfile.lock
 
 
-# Why
+## Why
 _TODO_
 
-# Install
+## Install
 
 ```
 brew tap ngtk/bundlerenv
