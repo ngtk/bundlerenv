@@ -65,6 +65,12 @@ versions() {
     echo "  $bundler_version (set by $(gemfile_lock_path)) is not exist."
   fi
 
+  # one version only
+  if [ "$(echo $version_list | grep ',')" = "" ]; then
+    echo "* $version_list $description"
+    return 0
+  fi
+
   # show version list
   local num=1
   while :
