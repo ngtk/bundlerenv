@@ -40,25 +40,23 @@ EOL
 }
 
 version() {
-  local bundle="/usr/local/var/rbenv/shims/bundle"
   if [ -e "Gemfile.lock" ]; then
     local bundler_version=$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
     local gemfile_lock_path="$(pwd)/Gemfile.lock"
     echo "Bundler version $bundler_version (set by $gemfile_lock_path)"
   else
-    $bundle -v
+    $(bundler_exec_path) -v
   fi
 }
 
 versions() {
   # fetch bundler version you have to use
-  local bundle="/usr/local/var/rbenv/shims/bundle"
   if [ -e "Gemfile.lock" ]; then
     local bundler_version=$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
     local gemfile_lock_path="$(pwd)/Gemfile.lock"
     local description="(set by $gemfile_lock_path)"
   else
-    local bundler_version=$($bundle -v)
+    local bundler_version=$($(bundler_exec_path) -v | sed -e 's/Bundler version //')
   fi
 
   # check version presence set by Gemfile.lock
@@ -82,6 +80,16 @@ versions() {
     fi
     num=$(($num+1))
   done
+}
+
+# private
+
+bundler_exec_path() {
+  if [ "$BUNDLER_PATH" = "" ]; then
+    echo "/usr/local/var/rbenv/shims/bundle"
+  else
+    echo $BUNDLER_PATH
+  fi
 }
 
 main "$@"
