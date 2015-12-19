@@ -89,11 +89,11 @@ bundler_exec_path() {
 }
 
 gemfile_lock_bundler_version() {
-    echo $(
-        grep 'BUNDLED WITH' -A1 Gemfile.lock |
-        grep '\d\+\.\d\+\.\d\+' |
-        sed -e 's/   //'
-      )
+  echo $(
+      grep 'BUNDLED WITH' -A1 Gemfile.lock |
+      grep '\d\+\.\d\+\.\d\+' |
+      sed -e 's/   //'
+    )
 }
 
 gemfile_lock_path() {
