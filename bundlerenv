@@ -41,9 +41,8 @@ EOL
 
 version() {
   if [ -e "Gemfile.lock" ]; then
-    local bundler_version=$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
     local gemfile_lock_path="$(pwd)/Gemfile.lock"
-    echo "Bundler version $bundler_version (set by $gemfile_lock_path)"
+    echo "Bundler version $(gemfile_lock_bundler_version) (set by $gemfile_lock_path)"
   else
     $(bundler_exec_path) -v
   fi
@@ -52,7 +51,7 @@ version() {
 versions() {
   # fetch bundler version you have to use
   if [ -e "Gemfile.lock" ]; then
-    local bundler_version=$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
+    local bundler_version=$(gemfile_lock_bundler_version)
     local gemfile_lock_path="$(pwd)/Gemfile.lock"
     local description="(set by $gemfile_lock_path)"
   else
@@ -90,6 +89,14 @@ bundler_exec_path() {
   else
     echo $BUNDLER_PATH
   fi
+}
+
+gemfile_lock_bundler_version() {
+    echo $(
+        grep 'BUNDLED WITH' -A1 Gemfile.lock |
+        grep '\d\+\.\d\+\.\d\+' |
+        sed -e 's/   //'
+      )
 }
 
 main "$@"
