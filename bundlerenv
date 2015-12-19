@@ -41,8 +41,7 @@ EOL
 
 version() {
   if [ -e "Gemfile.lock" ]; then
-    local gemfile_lock_path="$(pwd)/Gemfile.lock"
-    echo "Bundler version $(gemfile_lock_bundler_version) (set by $gemfile_lock_path)"
+    echo "Bundler version $(gemfile_lock_bundler_version) (set by $(gemfile_lock_path))"
   else
     $(bundler_exec_path) -v
   fi
@@ -52,8 +51,7 @@ versions() {
   # fetch bundler version you have to use
   if [ -e "Gemfile.lock" ]; then
     local bundler_version=$(gemfile_lock_bundler_version)
-    local gemfile_lock_path="$(pwd)/Gemfile.lock"
-    local description="(set by $gemfile_lock_path)"
+    local description="(set by $(gemfile_lock_path))"
   else
     local bundler_version=$($(bundler_exec_path) -v | sed -e 's/Bundler version //')
   fi
@@ -61,8 +59,7 @@ versions() {
   # check version presence set by Gemfile.lock
   local version_list=$(gem list ^bundler$ | sed -e 's/bundler (//' | sed -e 's/)//' )
   if [ "$(echo $version_list | grep $bundler_version)" = "" ]; then
-    local gemfile_lock_path="$(pwd)/Gemfile.lock"
-    echo "  $bundler_version (set by $gemfile_lock_path) is not exist."
+    echo "  $bundler_version (set by $(gemfile_lock_path)) is not exist."
   fi
 
   # show version list
@@ -97,6 +94,10 @@ gemfile_lock_bundler_version() {
         grep '\d\+\.\d\+\.\d\+' |
         sed -e 's/   //'
       )
+}
+
+gemfile_lock_path() {
+  echo "$PWD/Gemfile.lock"
 }
 
 main "$@"
