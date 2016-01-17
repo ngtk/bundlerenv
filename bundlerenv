@@ -92,7 +92,7 @@ versions() {
 }
 
 self_version() {
-  local bundlerenv_version="0.3.0"
+  local bundlerenv_version="0.3.1"
   echo "bundlerenv $bundlerenv_version"
 }
 
