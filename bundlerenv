@@ -25,13 +25,15 @@ init() {
   cat << EOL
 bundle() {
   local bundle="/usr/local/var/rbenv/shims/bundle"
-
   if [ -e "Gemfile.lock" ]; then
     local bundler_version=\$(grep 'BUNDLED WITH' -A1 Gemfile.lock | grep '\d\+\.\d\+\.\d\+' | sed -e 's/   //')
+  fi
+
+  if [ "\$bundler_version" = "" ]; then
+    \$bundle \$*
+  else
     echo "using Bundler \$(echo \$bundler_version) set by Gemfile.lock"
     eval "\$bundle _\$(echo \$bundler_version)_ \$*"
-  else
-    \$bundle \$*
   fi
 }
 
