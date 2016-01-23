@@ -1,8 +1,16 @@
 #!/bin/bash
 
 usage() {
+  self_version
   cat <<EOL
-install:
+Usage: bundlerenv <command> [<args>]
+
+Some useful bundlerenv commands are:
+   install   Install a Bundler version using ruby-gems
+   version   Show the current Bundler version
+   versions  List all Bundler versions available to bundlerenv
+
+Install:
 echo 'eval "\$\(bundlerenv init\)"' >> ~/.bashrc
 EOL
 }
