@@ -10,6 +10,8 @@ EOL
 main() {
   if [ "$1" = "init" ]; then
     init
+  elif [ "$1" = "install" ]; then
+    install $2
   elif [ "$1" = "version" ]; then
     version
   elif [ "$1" = "versions" ]; then
@@ -46,6 +48,14 @@ bundler() {
   bundle
 }
 EOL
+}
+
+install() {
+  if [ "$1" = "" ]; then
+    gem install bundler
+  else
+    gem install bundler -v $1
+  fi
 }
 
 version() {
