@@ -18,6 +18,8 @@ main() {
     versions
   elif [ "$1" = "-v" ]; then
     self_version
+  elif [ "$1" = "--version" ]; then
+    self_version
   else
     usage
   fi
