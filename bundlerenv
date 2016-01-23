@@ -45,25 +45,25 @@ EOL
 
 version() {
   if [ -e "Gemfile.lock" ]; then
-    echo "Bundler version $(gemfile_lock_bundler_version) (set by $(gemfile_lock_path))"
+    echo "Bundler version $(_gemfile_lock_bundler_version) (set by $(_gemfile_lock_path))"
   else
-    $(bundler_exec_path) -v
+    $(_bundler_exec_path) -v
   fi
 }
 
 versions() {
   # fetch bundler version you have to use
   if [ -e "Gemfile.lock" ]; then
-    local bundler_version=$(gemfile_lock_bundler_version)
-    local description="(set by $(gemfile_lock_path))"
+    local bundler_version=$(_gemfile_lock_bundler_version)
+    local description="(set by $(_gemfile_lock_path))"
   else
-    local bundler_version=$($(bundler_exec_path) -v | sed -e 's/Bundler version //')
+    local bundler_version=$($(_bundler_exec_path) -v | sed -e 's/Bundler version //')
   fi
 
   # check version presence set by Gemfile.lock
-  local version_list=$(installed_versions)
+  local version_list=$(_installed_versions)
   if [ "$(echo $version_list | grep $bundler_version)" = "" ]; then
-    echo "  $bundler_version (set by $(gemfile_lock_path)) is not exist."
+    echo "  $bundler_version (set by $(_gemfile_lock_path)) is not exist."
   fi
 
   # one version only
@@ -95,11 +95,11 @@ self_version() {
 
 # private
 
-installed_versions() {
+_installed_versions() {
   gem list ^bundler$ | sed -e 's/bundler (//' -e 's/)//'
 }
 
-bundler_exec_path() {
+_bundler_exec_path() {
   if [ "$BUNDLER_PATH" = "" ]; then
     echo "/usr/local/var/rbenv/shims/bundle"
   else
@@ -107,7 +107,7 @@ bundler_exec_path() {
   fi
 }
 
-gemfile_lock_bundler_version() {
+_gemfile_lock_bundler_version() {
   echo $(
       grep 'BUNDLED WITH' -A1 Gemfile.lock |
       grep '\d\+\.\d\+\.\d\+' |
@@ -115,7 +115,7 @@ gemfile_lock_bundler_version() {
     )
 }
 
-gemfile_lock_path() {
+_gemfile_lock_path() {
   echo "$PWD/Gemfile.lock"
 }
 
