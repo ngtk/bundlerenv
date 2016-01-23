@@ -61,10 +61,7 @@ versions() {
   fi
 
   # check version presence set by Gemfile.lock
-  local version_list=$(
-    gem list ^bundler$ |
-    sed -e 's/bundler (//' -e 's/)//'
-  )
+  local version_list=$(installed_versions)
   if [ "$(echo $version_list | grep $bundler_version)" = "" ]; then
     echo "  $bundler_version (set by $(gemfile_lock_path)) is not exist."
   fi
@@ -97,6 +94,10 @@ self_version() {
 }
 
 # private
+
+installed_versions() {
+  gem list ^bundler$ | sed -e 's/bundler (//' -e 's/)//'
+}
 
 bundler_exec_path() {
   if [ "$BUNDLER_PATH" = "" ]; then
