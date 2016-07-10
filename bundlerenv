@@ -47,6 +47,9 @@ bundle() {
     local installed="\$(gem list ^bundler$ | sed -e 's/bundler (//' -e 's/)//')"
     if [ "\$(echo \$installed | grep \$bundler_version)" = "" ]; then
       echo "Bundler \$bundler_version is not installed."
+      echo "to install:"
+      echo ""
+      echo "$ gem install bundler -v \$bundler_version"
       return 0
     fi
     echo "using Bundler \$(echo \$bundler_version) set by Gemfile.lock"
